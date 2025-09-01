@@ -1,16 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../components/Login.vue';
-import AdminDashboard from '../components/admin/AdminDashboard.vue';
-import OperatorDashboard from '../components/operator/OperatorDashboard.vue';
-import BackofficeDashboard from '../components/backoffice/BackofficeDashboard.vue';
 
-import NotFound from '../components/NotFound.vue';
+import Login from '../views/Login.vue';
+import AdminDashboard from '../views/admin/AdminDashboard.vue';
+import OperatorDashboard from '../views/operator/OperatorDashboard.vue';
+import BackofficeDashboard from '../views/backoffice/BackofficeDashboard.vue';
+import NotFound from '../views/NotFound.vue';
 
-import DisplayAllEntries from '../components/entries/frontoffice/DisplayAllEntries.vue';
-import EntryFrontEdit from '../components/entries/frontoffice/EntryFrontEdit.vue';
-
-// import CreateEmployee from '../components/admin/CreateEmployee.vue';
-import MyEntries from '../components/entries/backoffice/MyEntries.vue';
 
 const routes = [
   {
@@ -37,24 +32,7 @@ const routes = [
     meta: { requiresAuth: true, role: "backoffice" }
   },
   {
-    path: "/display_all_entries",
-    name: "display_all_entries",
-    component: DisplayAllEntries
-  },
-  {
-    path: "/entry_front_edit/:id",
-    name: "entry_front_edit",
-    component: EntryFrontEdit,
-    props: true
-  },
-  {
-    path: "/my_entries/:id",
-    name: "my_entries",
-    component: MyEntries,
-    props: true
-  },
-  {
-    path: "/:pathMatch(.*)*",
+    path: "/:any(.*)*",
     name: "not_found",
     component: NotFound
   }
