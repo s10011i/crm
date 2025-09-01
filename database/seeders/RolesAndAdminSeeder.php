@@ -15,13 +15,13 @@ class RolesAndAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create roles
+        // create roles
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $operator = Role::firstOrCreate(['name' => 'operator']);
         $backoffice = Role::firstOrCreate(['name' => 'backoffice']);
 
 
-        // Create admin user
+        // create admin user
         $user = User::firstOrCreate(
         ['email' => 'admin@example.com'],
         [
@@ -32,7 +32,7 @@ class RolesAndAdminSeeder extends Seeder
         );
 
 
-        // Assign role
+        // assign role
         $user->assignRole($admin);
     }
 }

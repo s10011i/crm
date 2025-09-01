@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from "vue";
-import Entries from "../../components/Entries.vue";
-import CreateEntry from "../../components/CreateEntry.vue";
+import Header from "../../components/ui-comps/Header.vue";
+import Entries from "../../components/operator/Entries.vue";
+import CreateEntry from "../../components/operator/CreateEntry.vue";
 
 
 const activeTab = ref("entries");
@@ -10,24 +11,15 @@ const activeComponent = computed(() => {
     return activeTab.value === "entries" ? Entries : CreateEntry;
 });
 
-const logout = () => {
-    sessionStorage.clear();
-    window.location.href = "/";
-};
+// get user from sessionStorage
+const user = JSON.parse(sessionStorage.getItem("user"));
+
 </script>
 
 <template>
-    <div class="dashboard-container">
+    <div class="container">
         <!-- Header -->
-        <header class="header-section">
-            <div class="title-section">
-                <h1>Operator Dashboard</h1>
-                <p class="subtitle">Welcome, <strong>John</strong></p>
-            </div>
-            <div>
-                <button class="logout-btn" @click="logout">Logout</button>
-            </div>
-        </header>
+        <Header title="Operator Dashboard" :user="user.name" />
 
         <!-- Horizontal Navbar -->
         <nav class="horizontal-navbar">
@@ -49,45 +41,12 @@ const logout = () => {
 </template>
 
 <style scoped>
-.dashboard-container {
+.container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     font-family: Arial, sans-serif;
     background: #fafafa;
-}
-
-/* Header */
-.header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: #2c3e50;
-    color: white;
-}
-
-.title-section h1 {
-    margin: 0;
-    font-size: 1.8rem;
-}
-
-.subtitle {
-    margin-top: 4px;
-    font-size: 0.95rem;
-}
-
-.logout-btn {
-    background: #e74c3c;
-    color: white;
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.logout-btn:hover {
-    background: #c0392b;
 }
 
 /* Horizontal navbar */
@@ -118,6 +77,6 @@ const logout = () => {
 /* Main content */
 .main-content {
     flex: 1;
-    padding: 24px;
+    padding: 25px;
 }
 </style>

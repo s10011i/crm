@@ -43,21 +43,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="entries-container">
-    <h2>Entries</h2>
+  <div>
+    <h2 style="margin-bottom: 30px">Entries</h2>
 
-    <!-- Search input -->
+    <!-- Search Bar -->
     <input
       type="text"
       v-model="searchQuery"
-      placeholder="Search by first name, last name or phone number"
-      class="search-input"
+      placeholder="🔍 Search by first name, last name or phone..."
+      class="search-bar"
     />
 
-    <div v-if="loading">Loading entries...</div>
+    <div v-if="loading" class="loading">Loading entries...</div>
     <div v-if="error" class="error">{{ error }}</div>
 
-    <table v-if="!loading && filteredEntries.length">
+    <!-- Entries Table -->
+    <table v-if="!loading && filteredEntries.length" class="entries-table">
       <thead>
         <tr>
           <th>First Name</th>
@@ -69,61 +70,104 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="entry in filteredEntries" :key="entry.id">
+        <tr v-for="entry in filteredEntries" :key="entry.id" class="entry-row">
           <td>{{ entry.first_name }}</td>
           <td>{{ entry.last_name }}</td>
           <td>{{ entry.phone_number }}</td>
-          <td>{{ entry.status }}</td>
+          <td>
+            <span :class="['status-badge', entry.status]">{{ entry.status }}</span>
+          </td>
           <td>{{ entry.assignee?.username || "Unassigned" }}</td>
           <td>
             <ul v-if="entry.comments && entry.comments.length">
               <li v-for="comment in entry.comments" :key="comment.id">
-                <strong>{{ comment.user.username }}:</strong> {{ comment.body }}
+                <strong>{{ comment.user.username }}:</strong><span class="comments">{{ comment.body }}</span>
               </li>
             </ul>
-            <span v-else>No comments</span>
+            <span v-else class="comments">No comments</span>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div v-if="!loading && filteredEntries.length === 0">No entries found.</div>
+    <div v-if="!loading && filteredEntries.length === 0" class="no-results">No entries found.</div>
   </div>
 </template>
 
 <style scoped>
-.entries-container {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
-
-.search-input {
-  margin-top: 10px;
+/* Search */
+.search-bar {
+  margin-bottom: 14px;
   padding: 8px 12px;
   width: 100%;
-  max-width: 400px;
-  border-radius: 4px;
+  max-width: 420px;
+  border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 0.95rem;
 }
 
-table {
+/* Table */
+.entries-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
 }
-
-th, td {
+.entries-table th {
+  background: #1c5980;
+  color: white;
   padding: 10px;
-  border: 1px solid #ccc;
   text-align: left;
 }
-
-th {
-  background-color: #f4f6f9;
+.entries-table td {
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  vertical-align: top;
+}
+.entry-row:hover {
+  background: #ecf0f1;
 }
 
-.error {
-  color: red;
-  margin-top: 10px;
+/* Status badges */
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.status-badge.pending {
+  background: #f39c12;
+  color: white;
+}
+.status-badge.in_progress {
+  background: #3498db;
+  color: white;
+}
+.status-badge.closed {
+  background: #2ecc71;
+  color: white;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Comments */
+.comments {
+  color: #888;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Misc */
+.loading,
+.error,
+.no-results {
+  margin-top: 15px;
+  font-size: 1rem;
 }
 </style>

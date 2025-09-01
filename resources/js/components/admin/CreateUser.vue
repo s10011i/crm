@@ -31,8 +31,8 @@ const createUser = async () => {
 
 <template>
   <section class="create-user">
-    <h2>Create New User</h2>
-    <form @submit.prevent="createUser">
+    <h2 style="margin-bottom: 30px">Create New User</h2>
+    <form @submit.prevent="createUser" class="entry-form">
       <input type="text" v-model="form.name" placeholder="Name" required />
       <input type="email" v-model="form.email" placeholder="Email" required />
       <input type="text" v-model="form.username" placeholder="Username" required />
@@ -50,7 +50,8 @@ const createUser = async () => {
 
 
 <style scoped>
-form {
+/* Form */
+.entry-form {
   display: flex;
   flex-direction: column;
   max-width: 400px;
@@ -59,15 +60,16 @@ input, select {
   margin-bottom: 10px;
   padding: 8px;
 }
+/* Button */
 button {
   padding: 10px;
-  background: #2980b9;
+  background: #1c5980;
   border: none;
   color: white;
   cursor: pointer;
 }
 button:hover {
-  background: #1c5980;
+  background: #2980b9;
 }
 .message {
   margin-top: 12px;

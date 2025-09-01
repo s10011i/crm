@@ -23,11 +23,10 @@ const login = async () => {
       password: password.value,
     });
 
-    // Save token and user info in session storage
     sessionStorage.setItem("token", res.data.token);
     sessionStorage.setItem("user", JSON.stringify(res.data.user));
 
-    // Redirect based on role
+    // redirect based on role
     const role = res?.data?.user?.roles[0].name;
 
     if (role && roleRoutes[role]) {
@@ -110,7 +109,7 @@ const login = async () => {
   color: #333;
 }
 
-/* Form groups */
+/* Form */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -141,7 +140,7 @@ const login = async () => {
 button {
   width: 100%;
   padding: 0.8rem;
-  background-color: #007BFF;
+  background-color: #1c5980;
   color: white;
   font-weight: bold;
   border: none;
@@ -152,7 +151,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #2980b9;
 }
 
 /* Error message */

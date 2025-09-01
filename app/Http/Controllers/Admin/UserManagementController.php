@@ -10,36 +10,17 @@ use Spatie\Permission\Models\Role;
 
 class UserManagementController extends Controller
 {
-    public function __construct()
-    {
-        // Only admin can access these routes
-        // , 'role:admin'
-        // $this->middleware(['auth:sanctum', 'role:admin']);
-    }
-
-    /**
-     * List all users (optional, for admin dashboard).
-     */
     public function index()
     {
-        // dd('murd');
-        // return response()->json(['message' => 'API works!']);
-        $users = User::with('roles')->get();
-        // $users = User::with('roles')
-        //     ->whereHas('roles', function ($q) {
-        //         $q->whereIn('name', ['operator', 'backoffice']);
-        //     })
-        //     ->get();
-        // $users = User::role(['operator', 'backoffice'])->with('roles')->get();
+        $users = User::role(['operator', 'backoffice'])->with('roles')->get();
         return response()->json($users);
     }
 
     /**
-     * Store a new Operator or Backoffice user.
+     * create a user.
      */
     public function store(Request $request)
     {
-        // return response()->json(['message' => 'API works!']);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
@@ -55,7 +36,7 @@ class UserManagementController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Assign role
+        // assign role
         $user->assignRole($validated['role']);
 
         return response()->json([

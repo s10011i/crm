@@ -1,13 +1,12 @@
 <script setup>
 import ButtonLogout from './ButtonLogout.vue'
 
-// Props coming from parent (dashboard pages)
 defineProps({
     title: {
         type: String,
         default: 'Dashboard'
     },
-    username: {
+    user: {
         type: String,
         default: 'Guest'
     }
@@ -18,7 +17,7 @@ defineProps({
     <header class="header-section">
         <div class="title-section">
             <h1>{{ title }}</h1>
-            <p class="subtitle">Welcome, <strong>{{ username }}</strong></p>
+            <p class="subtitle">Welcome, <strong>{{ user }}</strong></p>
         </div>
         <div>
             <ButtonLogout />

@@ -20,9 +20,6 @@ class Entry extends Model
         'assignee_id',
     ];
 
-    /**
-     * Assignee relationship (User who handles the entry).
-     */
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assignee_id');

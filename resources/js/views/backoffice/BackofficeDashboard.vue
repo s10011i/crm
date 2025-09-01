@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
-import EntryDetail from "../../components/EntryDetail.vue";
+import Header from "../../components/ui-comps/Header.vue";
+import EntryDetail from "../../components/backoffice/EntryDetail.vue";
 
 const entries = ref([]);
 const loading = ref(true);
@@ -10,6 +11,9 @@ const searchQuery = ref("");
 
 const selectedEntry = ref(null);
 const showModal = ref(false);
+
+// get user from sessionStorage
+const user = JSON.parse(sessionStorage.getItem("user"));
 
 // Fetch entries
 const fetchEntries = async () => {
@@ -49,9 +53,13 @@ const closeModal = () => {
   showModal.value = false;
 };
 
-const logout = () => {
-  sessionStorage.clear();
-  window.location.href = "/";
+const handleUpdated = (updatedEntry) => {
+  // update only the changed entry in the list
+  const idx = entries.value.findIndex(e => e.id === updatedEntry.id);
+  if (idx !== -1) {
+    entries.value[idx] = updatedEntry;
+  }
+  closeModal();
 };
 
 onMounted(() => {
@@ -60,27 +68,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dashboard-container">
+  <div class="container">
     <!-- Header -->
-    <header class="header-section">
-      <div class="title-section">
-        <h1>Backoffice Dashboard</h1>
-        <p class="subtitle">Welcome, <strong>Backoffice</strong></p>
-      </div>
-      <div>
-        <button class="logout-btn" @click="logout">Logout</button>
-      </div>
-    </header>
+    <Header title="Backoffice Dashboard" :user="user.name" />
 
     <!-- Entries Section -->
     <section class="entries-container">
-      <h2 class="section-title">Entries</h2>
+      <h2 style="margin-bottom: 30px">Entries</h2>
 
       <!-- Search Bar -->
       <input
         type="text"
         v-model="searchQuery"
-        placeholder="🔍 Search by name or phone..."
+        placeholder="🔍 Search by first name, last name or phone..."
         class="search-bar"
       />
 
@@ -114,12 +114,12 @@ onMounted(() => {
             </td>
             <td>{{ entry.assignee?.username || "Unassigned" }}</td>
             <td>
-              <ul v-if="entry.comments?.length">
+              <ul v-if="entry.comments && entry.comments.length">
                 <li v-for="comment in entry.comments" :key="comment.id">
-                  <strong>{{ comment.user.username }}:</strong> {{ comment.body }}
+                  <strong>{{ comment.user.username }}:</strong><span class="comments">{{ comment.body }}</span>
                 </li>
               </ul>
-              <span v-else class="no-comments">No comments</span>
+              <span v-else class="comments">No comments</span>
             </td>
           </tr>
         </tbody>
@@ -128,14 +128,6 @@ onMounted(() => {
       <div v-if="!loading && filteredEntries.length === 0" class="no-results">
         No entries found.
       </div>
-
-      <!-- Entry Detail Modal -->
-      <!-- <EntryDetail
-        v-if="selectedEntry"
-        :entry="selectedEntry"
-        @close="selectedEntry = null"
-        @updated="fetchEntries"
-      /> -->
     </section>
     <!-- Entry Detail Modal -->
     <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
@@ -144,7 +136,7 @@ onMounted(() => {
           v-if="selectedEntry"
           :entry="selectedEntry"
           @close="closeModal"
-          @updated="() => { fetchEntries(); closeModal(); }"
+          @updated="handleUpdated"
         />
       </div>
     </div>
@@ -153,43 +145,16 @@ onMounted(() => {
 
 <style scoped>
 /* Layout */
-.dashboard-container {
+.container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   font-family: Arial, sans-serif;
   background: #fafafa;
 }
-
-/* Header */
-.header-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background: #2c3e50;
-  color: white;
-}
-.title-section h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
-.subtitle {
-  margin-top: 4px;
-  font-size: 0.95rem;
-}
-
-/* Buttons */
-.logout-btn {
-  background: #e74c3c;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.logout-btn:hover {
-  background: #c0392b;
+.entries-container{
+  flex: 1;
+  padding: 25px;
 }
 
 /* Search */
@@ -213,7 +178,7 @@ onMounted(() => {
   overflow: hidden;
 }
 .entries-table th {
-  background: #2980b9;
+  background: #1c5980;
   color: white;
   padding: 10px;
   text-align: left;
@@ -224,7 +189,7 @@ onMounted(() => {
   vertical-align: top;
 }
 .entry-row:hover {
-  background: #f4faff;
+  background: #ecf0f1;
   cursor: pointer;
 }
 
@@ -248,9 +213,14 @@ onMounted(() => {
   background: #2ecc71;
   color: white;
 }
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 
 /* Comments */
-.no-comments {
+.comments {
   color: #888;
   font-style: italic;
   font-size: 0.9rem;
@@ -282,10 +252,7 @@ onMounted(() => {
 .loading,
 .error,
 .no-results {
-  margin-top: 14px;
+  margin-top: 15px;
   font-size: 1rem;
-}
-.error {
-  color: red;
 }
 </style>

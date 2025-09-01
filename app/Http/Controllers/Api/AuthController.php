@@ -10,12 +10,10 @@ use App\Models\User;
 class AuthController extends Controller
 {
     /**
-     * Login user via username or email
+     * login user via username or email
      */
     public function login(Request $request)
     {   
-        // dd('murd');
-        // return response()->json(['message' => 'API works!']);
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -37,7 +35,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout user (revoke current token)
+     * logout user 
      */
     public function logout(Request $request)
     {

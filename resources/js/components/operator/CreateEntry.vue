@@ -42,7 +42,7 @@ const submitEntry = async () => {
 </script>
 
 <template>
-  <div class="create-entry">
+  <div>
     <h2 style="margin-bottom: 30px">Create New Entry</h2>
     <form @submit.prevent="submitEntry" class="entry-form">
       <label>
@@ -73,6 +73,7 @@ const submitEntry = async () => {
 </template>
 
 <style scoped>
+/* Form */
 .entry-form {
   display: flex;
   flex-direction: column;
@@ -89,6 +90,7 @@ const submitEntry = async () => {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+/* Button */
 .entry-form button {
   padding: 10px 12px;
   background: #1c5980;

@@ -3,7 +3,8 @@ import { ref } from "vue";
 import axios from "axios";
 
 const props = defineProps({
-  entry: Object
+  entry: Object,
+  operators: Object
 });
 const emit = defineEmits(["close", "updated"]);
 
@@ -18,14 +19,15 @@ const fetchOperators = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/backoffice/users", {
       headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
     });
-    operators.value = res.data.filter(user => user.roles.includes("operator"));
-    // operators.value = res.data.filter(user => user.roles?.some(r => r.name === 'operator'));
+    operators.value = res.data.filter(user => user.roles?.some(r => r.name === 'operator'));
   } catch (err) {
     console.error(err);
   }
 };
 
-fetchOperators();
+// onMounted(() => {
+  fetchOperators();
+// });
 
 const updateEntry = async () => {
   try {
@@ -34,15 +36,12 @@ const updateEntry = async () => {
       { status: status.value,
         assignee_id: assignee_id.value,
         comment: comment.value
-    },
+      },
       { headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` } }
     );
-    // clear comment input after save
     comment.value = "";
     // send the fresh entry back to parent
-    // emit("updated");
     emit("updated", res.data.entry);
-
     emit("close");
   } catch (err) {
     console.error(err);

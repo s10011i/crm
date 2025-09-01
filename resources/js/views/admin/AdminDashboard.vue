@@ -1,22 +1,22 @@
 <script setup>
 import { ref, computed } from "vue";
-import UserList from "../../components/UserList.vue";
-import CreateUser from "../../componentsCreateUser.vue";
+import Header from "../../components/ui-comps/Header.vue";
+import UserList from "../../components/admin/UserList.vue";
+import CreateUser from "../../components/admin/CreateUser.vue";
 
-const activeTab = ref("users"); // default active tab
+const activeTab = ref("users");
 
 const activeComponent = computed(() => {
     return activeTab.value === "users" ? UserList : CreateUser;
 });
 
-const logout = () => {
-    sessionStorage.clear();
-    window.location.href = "/";
-};
+// get user from sessionStorage
+const user = JSON.parse(sessionStorage.getItem("user"));
+
 </script>
 
 <template>
-    <div class="dashboard-container">
+    <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Admin Panel</h2>
@@ -25,26 +25,20 @@ const logout = () => {
                 <li :class="{ active: activeTab === 'create' }" @click="activeTab = 'create'">Create User</li>
             </ul>
         </aside>
+        <div class="content-wrapper">
+            <!-- Header section -->
+            <Header title="Admin Dashboard" :user="user.name" />
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="header-section">
-                <div class="title-section">
-                    <h1>Admin Dashboard</h1>
-                    <p class="subtitle">Welcome, <strong>Admin</strong></p>
-                </div>
-                <div>
-                    <button class="logout-btn" @click="logout">Logout</button>
-                </div>
-            </header>
-
-            <component :is="activeComponent"></component>
-        </main>
+            <!-- Main section -->
+            <main class="main-content">
+                <component :is="activeComponent"></component>
+            </main>
+        </div>
     </div>
 </template>
 
 <style scoped>
-.dashboard-container {
+.container {
     display: flex;
     min-height: 100vh;
     font-family: Arial, sans-serif;
@@ -74,47 +68,17 @@ const logout = () => {
 .sidebar ul li.active {
     background: #34495e;
 }
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 /* Main content */
 .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
 }
-
-/* Header */
-.header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: #2c3e50;
-    color: white;
-}
-
-.title-section h1 {
-    margin: 0;
-    font-size: 1.8rem;
-}
-
-.subtitle {
-    margin-top: 4px;
-    font-size: 0.95rem;
-}
-
-/* Buttons */
-.logout-btn {
-    background: #e74c3c;
-    color: white;
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.logout-btn:hover {
-    background: #c0392b;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .dashboard-container {

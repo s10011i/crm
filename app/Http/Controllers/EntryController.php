@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class EntryController extends Controller
 {
     /**
-     * List entries with optional search
+     * get entries 
      */
     public function index(Request $request)
     {
@@ -19,7 +19,7 @@ class EntryController extends Controller
     }
 
     /**
-     * Create a new entry
+     * create a new entry
      */
     public function store(Request $request)
     {
@@ -48,13 +48,12 @@ class EntryController extends Controller
     public function update(Request $request, Entry $entry)
     {
         $validated = $request->validate([
-            'assignee_id' => 'nullable|exists:users,id', // assign operator
+            'assignee_id' => 'nullable|exists:users,id',
             'status'      => 'nullable|in:pending,in_progress,closed',
             'comment'     => 'nullable|string|max:2000',
         ]);
 
         DB::transaction(function () use ($request, $entry, $validated) {
-            // allow unassign (null) if the key is present
             if ($request->exists('assignee_id')) {
                 $entry->assignee_id = $validated['assignee_id'] ?? null;
             }
@@ -70,16 +69,14 @@ class EntryController extends Controller
             if ($commentBody !== '') {
                 $entry->comments()->create([
                     'body'    => $commentBody,
-                    'user_id' => $request->user()->id, // requires auth middleware
+                    'user_id' => $request->user()->id,
                 ]);
             }
         });
 
-        // return fresh entry with comments if you want
-        // $entry->load(['comments.user']);
         $entry->load([
-            'comments.user:id,name', // load comments + user’s name (optimize fields)
-            'assignee:id,name',      // if you have an assignee relation
+            'comments.user:id,name',
+            'assignee:id,name',
         ]);
 
         return response()->json([
