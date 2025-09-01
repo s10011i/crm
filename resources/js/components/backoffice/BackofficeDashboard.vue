@@ -49,6 +49,15 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+const handleUpdated = (updatedEntry) => {
+  // update only the changed entry in the list
+  const idx = entries.value.findIndex(e => e.id === updatedEntry.id);
+  if (idx !== -1) {
+    entries.value[idx] = updatedEntry;
+  }
+  closeModal();
+};
+
 const logout = () => {
   sessionStorage.clear();
   window.location.href = "/";
@@ -144,7 +153,8 @@ onMounted(() => {
           v-if="selectedEntry"
           :entry="selectedEntry"
           @close="closeModal"
-          @updated="() => { fetchEntries(); closeModal(); }"
+          <!-- @updated="() => { fetchEntries(); closeModal(); }" -->
+          @updated="handleUpdated"
         />
       </div>
     </div>

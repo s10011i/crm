@@ -15,10 +15,11 @@ const comment = ref("");
 const operators = ref([]);
 const fetchOperators = async () => {
   try {
-    const res = await axios.get("http://127.0.0.1:8000/api/admin/users", {
+    const res = await axios.get("http://127.0.0.1:8000/api/backoffice/users", {
       headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
     });
     operators.value = res.data.filter(user => user.roles.includes("operator"));
+    // operators.value = res.data.filter(user => user.roles?.some(r => r.name === 'operator'));
   } catch (err) {
     console.error(err);
   }
@@ -28,12 +29,20 @@ fetchOperators();
 
 const updateEntry = async () => {
   try {
-    await axios.put(
-      `http://127.0.0.1:8000/api/entries/${props.entry.id}`,
-      { status: status.value, assignee_id: assignee_id.value, comment: comment.value },
+    const res = await axios.put(
+      `http://127.0.0.1:8000/api/backoffice/entries/${props.entry.id}`,
+      { status: status.value,
+        assignee_id: assignee_id.value,
+        comment: comment.value
+    },
       { headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` } }
     );
-    emit("updated");
+    // clear comment input after save
+    comment.value = "";
+    // send the fresh entry back to parent
+    // emit("updated");
+    emit("updated", res.data.entry);
+
     emit("close");
   } catch (err) {
     console.error(err);
@@ -47,7 +56,7 @@ const closeModal = () => emit("close");
   <div class="modal">
     <h3>Update Entry</h3>
     <p><strong>{{ entry.first_name }} {{ entry.last_name }}</strong></p>
-    
+
     <label>
       Status:
       <select v-model="status">

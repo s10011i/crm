@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Entry;
+use Illuminate\Support\Facades\DB;
 
 class EntryController extends Controller
 {
@@ -21,14 +22,14 @@ class EntryController extends Controller
      * Create a new entry
      */
     public function store(Request $request)
-    {   
+    {
         $validated = $request->validate([
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
             'phone_number' => 'required|numeric',
             'complain'     => 'required|string',
         ]);
-        
+
 
         $entry = Entry::create([
             'first_name'   => $validated['first_name'],
@@ -49,22 +50,41 @@ class EntryController extends Controller
         $validated = $request->validate([
             'assignee_id' => 'nullable|exists:users,id', // assign operator
             'status'      => 'nullable|in:pending,in_progress,closed',
+            'comment'     => 'nullable|string|max:2000',
         ]);
 
-        if (isset($validated['assignee_id'])) {
-            $entry->assignee_id = $validated['assignee_id'];
-        }
+        DB::transaction(function () use ($request, $entry, $validated) {
+            // allow unassign (null) if the key is present
+            if ($request->exists('assignee_id')) {
+                $entry->assignee_id = $validated['assignee_id'] ?? null;
+            }
 
-        if (isset($validated['status'])) {
-            $entry->status = $validated['status'];
-        }
+            if (array_key_exists('status', $validated)) {
+                $entry->status = $validated['status'];
+            }
 
-        $entry->save();
+            $entry->save();
+
+            // create a comment if provided and not empty whitespace
+            $commentBody = trim((string) ($validated['comment'] ?? ''));
+            if ($commentBody !== '') {
+                $entry->comments()->create([
+                    'body'    => $commentBody,
+                    'user_id' => $request->user()->id, // requires auth middleware
+                ]);
+            }
+        });
+
+        // return fresh entry with comments if you want
+        // $entry->load(['comments.user']);
+        $entry->load([
+            'comments.user:id,name', // load comments + user’s name (optimize fields)
+            'assignee:id,name',      // if you have an assignee relation
+        ]);
 
         return response()->json([
             'message' => 'Entry updated successfully',
-            'entry'   => $entry
+            'entry'   => $entry,
         ]);
     }
-
 }

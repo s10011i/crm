@@ -21,10 +21,16 @@ class UserManagementController extends Controller
      * List all users (optional, for admin dashboard).
      */
     public function index()
-    {   
+    {
         // dd('murd');
         // return response()->json(['message' => 'API works!']);
         $users = User::with('roles')->get();
+        // $users = User::with('roles')
+        //     ->whereHas('roles', function ($q) {
+        //         $q->whereIn('name', ['operator', 'backoffice']);
+        //     })
+        //     ->get();
+        // $users = User::role(['operator', 'backoffice'])->with('roles')->get();
         return response()->json($users);
     }
 
@@ -32,7 +38,7 @@ class UserManagementController extends Controller
      * Store a new Operator or Backoffice user.
      */
     public function store(Request $request)
-    {   
+    {
         // return response()->json(['message' => 'API works!']);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -58,4 +64,3 @@ class UserManagementController extends Controller
         ], 201);
     }
 }
-
