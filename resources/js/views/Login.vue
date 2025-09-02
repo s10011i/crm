@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { API_BASE_URL } from './../constants/constants.js'
 
 const router = useRouter();
 
@@ -18,7 +19,7 @@ const roleRoutes = {
 const login = async () => {
   error.value = '';
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/login', {
+    const res = await axios.post(`${API_BASE_URL}/login`, {
       email: email.value,
       password: password.value,
     });
@@ -80,7 +81,7 @@ const login = async () => {
 </template>
 
 <style scoped>
-/* Container fills the screen */
+/* container  */
 .login-container {
   display: flex;
   justify-content: center;
@@ -91,7 +92,7 @@ const login = async () => {
   box-sizing: border-box;
 }
 
-/* Login box */
+/* login box */
 .login-box {
   background-color: #fff;
   padding: 2rem;
@@ -101,15 +102,15 @@ const login = async () => {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Heading */
+/* heading */
 .login-box h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.1rem;
   font-size: 1.8rem;
   color: #333;
 }
 
-/* Form */
+/* form */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -136,10 +137,11 @@ const login = async () => {
   box-shadow: 0 0 4px rgba(0,123,255,0.4);
 }
 
-/* Button */
+/* button */
 button {
   width: 100%;
   padding: 0.8rem;
+  margin-top: 10px;
   background-color: #1c5980;
   color: white;
   font-weight: bold;
@@ -154,7 +156,7 @@ button:hover {
   background-color: #2980b9;
 }
 
-/* Error message */
+/* error message */
 .error-message {
   margin-top: 1rem;
   color: red;
@@ -162,7 +164,7 @@ button:hover {
   text-align: center;
 }
 
-/* Mobile adjustments */
+/* mobile adjustments */
 @media (max-width: 480px) {
   .login-box {
     padding: 1.5rem;

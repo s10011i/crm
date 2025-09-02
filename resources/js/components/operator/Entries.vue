@@ -2,18 +2,21 @@
 import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import debounce from "lodash.debounce";
+import { API_BASE_URL } from '../../constants/constants.js'
 
 const entries = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const searchQuery = ref("");
 
+const currentUser = JSON.parse(sessionStorage.getItem("user"));
+
 // Fetch entries
 const fetchEntries = async (query = "") => {
     loading.value = true;
     error.value = null;
     try {
-        const res = await axios.get("http://127.0.0.1:8000/api/operator/entries", {
+        const res = await axios.get(`${API_BASE_URL}/operator/entries`, {
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
@@ -46,7 +49,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <h2 style="margin-bottom: 30px">Entries</h2>
+        <h2>Entries</h2>
 
         <!-- Search Bar -->
         <input type="text" v-model="searchQuery" placeholder="🔍 Search by first name, last name or phone..."
@@ -69,7 +72,7 @@ onMounted(() => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="entry in entries" :key="entry.id" class="entry-row">
+                    <tr v-for="entry in entries" :key="entry.id" class="entry-row" :class="{ 'highlight-row': entry.assignee?.id === currentUser.id }">
                         <td data-label="First Name">{{ entry.first_name }}</td>
                         <td data-label="Last Name">{{ entry.last_name }}</td>
                         <td data-label="Phone">{{ entry.phone_number }}</td>
@@ -96,6 +99,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+h2 {
+  margin-bottom: 20px;
+}
 /* Search */
 .search-bar {
     margin-bottom: 14px;
@@ -135,6 +141,10 @@ onMounted(() => {
 
 .entry-row:hover {
     background: #ecf0f1;
+}
+.highlight-row {
+  background-color: #f0f9ff;
+  border-left: 4px solid #3b82f6;
 }
 
 /* Status badges */

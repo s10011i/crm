@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import axios from "axios";
+import { API_BASE_URL } from '../../constants/constants.js'
 
 const form = reactive({
   first_name: "",
@@ -20,7 +21,7 @@ const submitEntry = async () => {
 
   try {
     const res = await axios.post(
-      "http://127.0.0.1:8000/api/operator/entries",
+      `${API_BASE_URL}/operator/entries`,
       form,
       {
         headers: {
@@ -42,8 +43,8 @@ const submitEntry = async () => {
 </script>
 
 <template>
-  <div>
-    <h2 style="margin-bottom: 30px">Create New Entry</h2>
+  <div class="form-wrapper">
+    <h2>Create New Entry</h2>
     <form @submit.prevent="submitEntry" class="entry-form">
       <label>
         First Name:
@@ -73,31 +74,50 @@ const submitEntry = async () => {
 </template>
 
 <style scoped>
+h2 {
+  margin-bottom: 20px;
+}
 /* Form */
 .entry-form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  width: 100%;
+  max-width: 450px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .entry-form label {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
+  font-weight: 500;
 }
 .entry-form input,
 .entry-form textarea {
-  padding: 6px;
+  padding: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.entry-form textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 /* Button */
 .entry-form button {
-  padding: 10px 12px;
+  padding: 12px;
   background: #1c5980;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 10px;
 }
 .entry-form button:hover {
   background: #2980b9;
@@ -105,5 +125,27 @@ const submitEntry = async () => {
 .message {
   margin-top: 12px;
   color: #1c5980;
+  font-weight: 500;
+}
+/* Responsive  */
+@media (max-width: 768px) {
+  .form-wrapper {
+    padding: 10px;
+  }
+
+  .entry-form {
+    padding: 15px;
+  }
+
+  .entry-form input,
+  .entry-form textarea {
+    font-size: 0.95rem;
+    padding: 8px;
+  }
+
+  .entry-form button {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
 }
 </style>

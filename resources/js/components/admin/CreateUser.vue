@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { API_BASE_URL } from '../../constants/constants.js'
 
 const form = ref({
   name: "",
@@ -14,7 +15,7 @@ const message = ref("");
 const createUser = async () => {
   try {
     const res = await axios.post(
-      "http://127.0.0.1:8000/api/admin/users",
+      `${API_BASE_URL}/admin/users`,
       form.value,
       { headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` } }
     );
@@ -31,7 +32,7 @@ const createUser = async () => {
 
 <template>
   <section class="create-user">
-    <h2 style="margin-bottom: 30px">Create New User</h2>
+    <h2>Create New User</h2>
     <form @submit.prevent="createUser" class="entry-form">
       <input type="text" v-model="form.name" placeholder="Name" required />
       <input type="email" v-model="form.email" placeholder="Email" required />
@@ -50,15 +51,28 @@ const createUser = async () => {
 
 
 <style scoped>
+h2 {
+  margin-bottom: 20px;
+}
 /* Form */
 .entry-form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 input, select {
   margin-bottom: 10px;
   padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 /* Button */
 button {
@@ -67,6 +81,9 @@ button {
   border: none;
   color: white;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 6px;
 }
 button:hover {
   background: #2980b9;
@@ -74,5 +91,6 @@ button:hover {
 .message {
   margin-top: 12px;
   color: #1c5980;
+  font-weight: 500;
 }
 </style>

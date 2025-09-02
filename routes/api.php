@@ -14,10 +14,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])
     ->prefix('admin')
     ->group(
         function () {
-            Route::get('users', [UserManagementController::class, 'index']);
-            Route::post('users', [UserManagementController::class, 'store']);
+            // shorter way
+            Route::apiResource('users', UserManagementController::class)->only(['index', 'store']);
         }
     );
+
 // Operator routes
 Route::middleware(['auth:sanctum', 'role:operator'])
     ->prefix('operator')

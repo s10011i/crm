@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { API_BASE_URL } from '../../constants/constants.js'
 
 const users = ref([]);
 const loading = ref(true);
@@ -10,7 +11,7 @@ const fetchUsers = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const res = await axios.get("http://127.0.0.1:8000/api/admin/users", {
+    const res = await axios.get(`${API_BASE_URL}/admin/users`, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`
       }

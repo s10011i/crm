@@ -2,6 +2,7 @@
 import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import debounce from "lodash.debounce";
+import { API_BASE_URL } from '../../constants/constants.js'
 import Header from "../../components/ui-comps/Header.vue";
 import EntryDetail from "../../components/backoffice/EntryDetail.vue";
 
@@ -21,7 +22,7 @@ const fetchEntries = async (query = "") => {
     loading.value = true;
     error.value = null;
     try {
-        const res = await axios.get("http://127.0.0.1:8000/api/backoffice/entries", {
+        const res = await axios.get(`${API_BASE_URL}/backoffice/entries`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
             params: {
                 search: query,
@@ -54,7 +55,6 @@ const handleUpdated = (updatedEntry) => {
     closeModal();
 };
 
-// Watch search input
 const debouncedFetch = debounce((query) => {
     fetchEntries(query);
 }, 500);
@@ -106,11 +106,11 @@ onMounted(() => {
                             <td data-label="Status">
                                 <span :class="['status-badge', entry.status]">{{ entry.status }}</span>
                             </td>
-                            <td data-label="Assigned To">{{ entry.assignee?.username || "Unassigned" }}</td>
+                            <td data-label="Assigned To">{{ entry.assignee?.name || "Unassigned" }}</td>
                             <td data-label="Comments">
                                 <ul v-if="entry.comments && entry.comments.length">
                                     <li v-for="comment in entry.comments" :key="comment.id">
-                                        <strong>{{ comment.user.username }}:</strong><span class="comments">{{
+                                        <strong>{{ comment.user.name }}:</strong><span class="comments">{{
                                             comment.body
                                             }}</span>
                                     </li>

@@ -13,9 +13,6 @@ class EntryController extends Controller
      */
     public function index(Request $request)
     {
-        // $entries = Entry::with(['assignee', 'comments.user'])->get();
-
-        // return response()->json($entries);
         $query = Entry::with(['assignee', 'comments.user']);
 
         if ($search = $request->query('search')) {
@@ -25,6 +22,7 @@ class EntryController extends Controller
                 ->orWhere('phone_number', 'LIKE', "%{$search}%");
             });
         }
+        $query->orderBy('created_at', 'desc');
 
         return response()->json($query->get());
     }
