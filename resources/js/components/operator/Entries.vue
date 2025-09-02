@@ -32,7 +32,6 @@ const fetchEntries = async (query = "") => {
     }
 };
 
-// Watch search input
 const debouncedFetch = debounce((query) => {
     fetchEntries(query);
 }, 500);

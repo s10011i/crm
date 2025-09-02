@@ -11,7 +11,7 @@ const activeComponent = computed(() => {
     return activeTab.value === "entries" ? Entries : CreateEntry;
 });
 
-// get user from sessionStorage
+// get user
 const user = JSON.parse(sessionStorage.getItem("user"));
 
 </script>

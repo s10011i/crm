@@ -10,7 +10,7 @@ const activeComponent = computed(() => {
     return activeTab.value === "users" ? UserList : CreateUser;
 });
 
-// get user from sessionStorage
+// get user
 const user = JSON.parse(sessionStorage.getItem("user"));
 
 </script>

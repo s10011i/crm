@@ -13,7 +13,7 @@ const form = reactive({
 const message = ref("");
 
 const submitEntry = async () => {
-  // Simple validation
+  // validation
   if (!form.first_name || !form.last_name || !form.phone_number || !form.complain) {
     message.value = "All fields are required!";
     return;

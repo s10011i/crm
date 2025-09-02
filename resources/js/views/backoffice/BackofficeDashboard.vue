@@ -14,7 +14,7 @@ const searchQuery = ref("");
 const selectedEntry = ref(null);
 const showModal = ref(false);
 
-// get user from sessionStorage
+// get user
 const user = JSON.parse(sessionStorage.getItem("user"));
 
 // Fetch entries

@@ -5,7 +5,6 @@ import { API_BASE_URL } from '../../constants/constants.js'
 
 const props = defineProps({
   entry: Object,
-  operators: Object
 });
 const emit = defineEmits(["close", "updated"]);
 
@@ -26,9 +25,7 @@ const fetchOperators = async () => {
   }
 };
 
-// onMounted(() => {
-  fetchOperators();
-// });
+fetchOperators();
 
 const updateEntry = async () => {
   try {

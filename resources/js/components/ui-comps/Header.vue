@@ -46,7 +46,7 @@ defineProps({
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .header-actions {
         width: 100%;
         display: flex;

@@ -1,13 +1,32 @@
 <script setup>
-const logout = () => {
+import axios from 'axios'
+import { ref } from 'vue'
+import { API_BASE_URL } from '../../constants/constants.js'
+
+const loggingOut = ref(false)
+
+const logout = async () => {
+  loggingOut.value = true
+  try {
+    await axios.post(`${API_BASE_URL}/logout`, {}, {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.getItem("token")}`
+      }
+    })
     sessionStorage.clear()
     window.location.href = "/"
+  } catch (error) {
+    console.error(error)
+    alert('Failed to logout')
+  } finally {
+    loggingOut.value = false
+  }
 }
 </script>
 
 <template>
-    <button class="logout-btn" @click="logout">
-        Logout
+    <button class="logout-btn" @click="logout" :disabled="loggingOut">
+        {{ loggingOut ? 'Logging out...' : 'Logout' }}
     </button>
 </template>
 
@@ -27,7 +46,7 @@ const logout = () => {
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .logout-btn {
         padding: 6px 12px;
         font-size: 0.9rem;
