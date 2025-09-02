@@ -44,4 +44,21 @@ defineProps({
     margin-top: 4px;
     font-size: 0.95rem;
 }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .title-section h1 {
+        font-size: 1.4rem;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+    }
+}
 </style>

@@ -9,13 +9,24 @@ use Illuminate\Support\Facades\DB;
 class EntryController extends Controller
 {
     /**
-     * get entries 
+     * get entries
      */
     public function index(Request $request)
     {
-        $entries = Entry::with(['assignee', 'comments.user'])->get();
+        // $entries = Entry::with(['assignee', 'comments.user'])->get();
 
-        return response()->json($entries);
+        // return response()->json($entries);
+        $query = Entry::with(['assignee', 'comments.user']);
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'LIKE', "%{$search}%")
+                ->orWhere('last_name', 'LIKE', "%{$search}%")
+                ->orWhere('phone_number', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return response()->json($query->get());
     }
 
     /**

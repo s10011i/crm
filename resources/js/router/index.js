@@ -44,26 +44,26 @@ const router = createRouter({
 });
 
 // 🔒 Route Guard
-router.beforeEach((to, from, next) => {
-  const token = sessionStorage.getItem("token");
-  const user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : null;
-  const userRole = user?.roles?.[0]?.name;
+// router.beforeEach((to, from, next) => {
+//   const token = sessionStorage.getItem("token");
+//   const user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : null;
+//   const userRole = user?.roles?.[0]?.name;
 
-  if (to.meta.requiresAuth) {
-    if (!token || !user) {
-      // Not logged in
-      return next("/");
-    }
-    if (to.meta.role && to.meta.role !== userRole) {
-      // Wrong role → redirect to their dashboard
-      if (userRole === "admin") return next("/admin");
-      if (userRole === "operator") return next("/operator");
-      if (userRole === "backoffice") return next("/backoffice");
-      return next("/"); // fallback
-    }
-  }
+//   if (to.meta.requiresAuth) {
+//     if (!token || !user) {
+//       // Not logged in
+//       return next("/");
+//     }
+//     if (to.meta.role && to.meta.role !== userRole) {
+//       // Wrong role → redirect to their dashboard
+//       if (userRole === "admin") return next("/admin");
+//       if (userRole === "operator") return next("/operator");
+//       if (userRole === "backoffice") return next("/backoffice");
+//       return next("/"); // fallback
+//     }
+//   }
 
-  next(); // allow navigation
-});
+//   next(); // allow navigation
+// });
 
 export default router;

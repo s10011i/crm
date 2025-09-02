@@ -68,10 +68,11 @@ const user = JSON.parse(sessionStorage.getItem("user"));
 .sidebar ul li.active {
     background: #34495e;
 }
+
 .content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Main content */
@@ -79,14 +80,22 @@ const user = JSON.parse(sessionStorage.getItem("user"));
     flex: 1;
     padding: 25px;
 }
+
 /* Responsive */
 @media (max-width: 768px) {
-    .dashboard-container {
+    .container {
         flex-direction: column;
     }
 
     .sidebar {
         width: 100%;
+        text-align: center;
+        padding: 15px 10px;
+    }
+
+    .sidebar ul li {
+        display: inline-block;
+        margin: 5px 8px;
     }
 }
 </style>

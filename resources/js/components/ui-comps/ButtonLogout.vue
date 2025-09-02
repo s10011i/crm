@@ -25,4 +25,12 @@ const logout = () => {
 .logout-btn:hover {
     background: #c0392b;
 }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .logout-btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
 </style>
